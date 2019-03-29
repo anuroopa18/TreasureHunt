@@ -1,5 +1,7 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -73,7 +75,10 @@ public class SubmissionEntity implements Serializable {
     }
 
     public void setImageStatus(String imageStatus) {
-        this.imageStatus = imageStatus;
+        String status = imageStatus.toUpperCase();
+        if (!status.equals("ACCEPTED") && !status.equals("REJECTED"))
+            return;
+        else this.imageStatus = status;
     }
 
     public String getReason() {

@@ -8,7 +8,8 @@ import com.example.demo.Repository.ClueRepository;
 import com.example.demo.Repository.HintRepository;
 import com.example.demo.Repository.QuestRepository;
 import com.example.demo.Repository.TeamRepository;
-import com.example.demo.Services.TeamService;
+import com.example.demo.Services.MainService;
+import com.sun.tools.javac.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class ClueController {
         System.out.println("No. of clues in quest " + quest.getClues().size());
         if (quest.getClues().size() == 1) {
             ClueEntity firstClue = quest.getClues().get(0);
-            TeamService teamService = new TeamService();
+            MainService teamService = new MainService();
             Set<TeamEntity> teams = teamService.createTeams(quest);
             for(TeamEntity team: teams) {
                 team.setClue_on(firstClue);
