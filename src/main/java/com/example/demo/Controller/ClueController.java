@@ -9,7 +9,6 @@ import com.example.demo.Repository.HintRepository;
 import com.example.demo.Repository.QuestRepository;
 import com.example.demo.Repository.TeamRepository;
 import com.example.demo.Services.MainService;
-import com.sun.tools.javac.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
