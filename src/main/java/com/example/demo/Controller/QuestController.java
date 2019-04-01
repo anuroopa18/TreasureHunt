@@ -56,7 +56,6 @@ public class QuestController {
                     quest.setClues(newQuest.getClues());
                 if (newQuest.getTimeLimit() != 0)
                     quest.setTimeLimit(newQuest.getTimeLimit());
-                System.out.println(newQuest.getNoOfTeams());
                 if (newQuest.getNoOfTeams() != quest.getNoOfTeams())
                     quest.setNoOfTeams(newQuest.getNoOfTeams());
                 return questRepository.save(quest);

@@ -70,9 +70,15 @@ public class ClueController {
         return clue;
     }
 
-    @DeleteMapping("/api/clues/{id}")
-    public void deleteClues(@PathVariable("id") Integer id) {
-        clueRepository.deleteById(id);
+    @PutMapping("/api/clues/delete/{id}")
+    public ClueEntity deleteClues(@PathVariable("id") Integer id) {
+        ClueEntity clue = clueRepository.findById(id).orElse(null);
+
+        if (clue != null) {
+            clue.setDeleted(true);
+        }
+
+        return clueRepository.save(clue);
     }
 
     @PutMapping("/api/clues/{id}")
