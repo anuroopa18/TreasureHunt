@@ -33,6 +33,7 @@ public class QuestController {
             this.startQuest(quest);
         if (quest.getNoOfTeams() > 26)
             throw new Error("Number od teams cannot be greater than 26");
+        quest.setCode(this.getAlphaNumericString());
         return questRepository.save(quest);
     }
 
@@ -88,6 +89,5 @@ public class QuestController {
     public void startQuest(QuestEntity quest) {
         quest.setStarted(true);
         quest.setStartTime(new Date());
-        quest.setCode(this.getAlphaNumericString());
     }
 }
