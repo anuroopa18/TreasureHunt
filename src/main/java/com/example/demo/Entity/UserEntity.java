@@ -28,11 +28,6 @@ public class UserEntity implements Serializable {
     inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
     private List<TeamEntity> teams;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<SubmissionEntity> submissions;
-
-
     public String getUsername() {
         return username;
     }
@@ -79,13 +74,5 @@ public class UserEntity implements Serializable {
 
     public void setTeams(List<TeamEntity> teams) {
         this.teams = teams;
-    }
-
-    public Set<SubmissionEntity> getSubmissions() {
-        return submissions;
-    }
-
-    public void setSubmissions(Set<SubmissionEntity> submissions) {
-        this.submissions = submissions;
     }
 }

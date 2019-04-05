@@ -56,20 +56,16 @@ public class SubmissionController {
         return clueTeamSubmissions;
     }
 
-    @PostMapping("/api/submissions/user/{user_id}/clue/{clue_id}")
+    @PostMapping("/api/submissions/team/{team_id}/clue/{clue_id}")
     public SubmissionEntity createSubmission(@RequestBody (required = false) SubmissionEntity submission,
-                                             @PathVariable("user_id") Integer user_id,
+                                             @PathVariable("team_id") Integer team_id,
                                              @PathVariable("clue_id") Integer clue_id) {
-        UserEntity user = userRepository.findById(user_id).orElseThrow(() ->
-            new EntityNotFoundException("User is not found " + user_id));
+        TeamEntity team = teamRepository.findById(team_id).orElseThrow(() ->
+            new EntityNotFoundException("Team is not found " + team_id));
         ClueEntity clue = clueRepository.findById(clue_id).orElseThrow(() ->
             new EntityNotFoundException("Clue is not found " + clue_id));
 
-        submission.setUser(user);
         submission.setClue(clue);
-
-        List<TeamEntity> teams = user.getTeams();
-        TeamEntity team = teams.get(teams.size() - 1);
         submission.setTeam(team);
         return submissionRepository.save(submission);
     }
