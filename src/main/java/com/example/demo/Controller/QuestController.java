@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Entity.ClueEntity;
 import com.example.demo.Entity.QuestEntity;
 import com.example.demo.Repository.QuestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class QuestController {
 
     @GetMapping("/api/quests/{id}")
     public QuestEntity findQuestById(@PathVariable("id") int id) {
-        return questRepository.findById(id).orElseThrow(() ->
+       return questRepository.findById(id).orElseThrow(() ->
 			new EntityNotFoundException("Quest is not found" + id));
     }
 
@@ -55,7 +56,6 @@ public class QuestController {
                     quest.setClues(newQuest.getClues());
                 if (newQuest.getTimeLimit() != 0)
                     quest.setTimeLimit(newQuest.getTimeLimit());
-                System.out.println(newQuest.getNoOfTeams());
                 if (newQuest.getNoOfTeams() != quest.getNoOfTeams())
                     quest.setNoOfTeams(newQuest.getNoOfTeams());
                 return questRepository.save(quest);

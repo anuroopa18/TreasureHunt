@@ -55,12 +55,11 @@ public class ClueController {
 
         clue = clueRepository.save(clue);
 
-        // CREATING TEAMS: -------> move this in future.
-        System.out.println("No. of clues in quest " + quest.getClues().size());
-        if (quest.getClues().size() == 1) {
-            ClueEntity firstClue = quest.getClues().get(0);
-            MainService teamService = new MainService();
-            Set<TeamEntity> teams = teamService.createTeams(quest);
+        //CREATING TEAMS: -------> move this in future.
+        if (quest.getNoOfTeams() > 0 && quest.getTeams().size() == 0) {
+            ClueEntity firstClue = clue;
+            MainService service = new MainService();
+            Set<TeamEntity> teams = service.createTeams(quest);
             for(TeamEntity team: teams) {
                 team.setClue_on(firstClue);
                 team.setQuest(quest);
@@ -71,9 +70,15 @@ public class ClueController {
         return clue;
     }
 
-    @DeleteMapping("/api/clues/{id}")
-    public void deleteClues(@PathVariable("id") Integer id) {
-        clueRepository.deleteById(id);
+    @PutMapping("/api/clues/delete/{id}")
+    public ClueEntity deleteClues(@PathVariable("id") Integer id) {
+        ClueEntity clue = clueRepository.findById(id).orElse(null);
+
+        if (clue != null) {
+            clue.setDeleted(true);
+        }
+
+        return clueRepository.save(clue);
     }
 
     @PutMapping("/api/clues/{id}")

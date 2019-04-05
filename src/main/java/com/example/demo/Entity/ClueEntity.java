@@ -18,6 +18,8 @@ public class ClueEntity implements Serializable {
 
     private int points;
 
+    private boolean isDeleted;
+
     @OneToOne(fetch = FetchType.EAGER, cascade =  CascadeType.ALL)
     @JoinColumn(name = "hint_id")
     private HintEntity hint;
@@ -97,5 +99,13 @@ public class ClueEntity implements Serializable {
 
     public void setTeams(Set<TeamEntity> teams) {
         this.teams = teams;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

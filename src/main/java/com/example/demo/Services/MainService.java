@@ -4,9 +4,7 @@ import com.example.demo.Entity.ClueEntity;
 import com.example.demo.Entity.QuestEntity;
 import com.example.demo.Entity.TeamEntity;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MainService {
     String[] names = {"Team A", "Team B","Team C", "Team D", "Team E", "Team F", "Team G", "Team H", "Team I",
@@ -27,15 +25,17 @@ public class MainService {
     }
 
     public ClueEntity nextClue(QuestEntity quest, ClueEntity clue) {
-        List<ClueEntity> clues = quest.getClues();
-        int noOfClues = clues.size();
+        Set<ClueEntity> clues = quest.getClues();
         int clueId = clue.getId();
-        for(int i = 0; i < noOfClues; i++) {
-            if (clues.get(i).getId() == clueId) {
-                if ( i == noOfClues - 1 )
+        Iterator<ClueEntity> itr = clues.iterator();
+        while(itr.hasNext()){
+            clue = itr.next();
+            if (clue.getId() == clueId) {
+                // last clue
+                if (!itr.hasNext())
                     return null;
                 else
-                    return clues.get(i+1);
+                    return itr.next();
             }
         }
 

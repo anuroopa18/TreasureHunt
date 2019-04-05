@@ -2,9 +2,7 @@ package com.example.demo.Entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "quests")
@@ -31,7 +29,8 @@ public class QuestEntity implements Serializable {
     private Set<TeamEntity> teams;
 
     @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ClueEntity> clues;
+    @OrderBy()
+    private Set<ClueEntity> clues;
 
     public int getId() {
         return id;
@@ -89,11 +88,11 @@ public class QuestEntity implements Serializable {
         this.teams.add(team);
     }
 
-    public List<ClueEntity> getClues() {
+    public Set<ClueEntity> getClues() {
         return clues;
     }
 
-    public void setClues(List<ClueEntity> clues) {
+    public void setClues(Set<ClueEntity> clues) {
         this.clues = clues;
     }
 
