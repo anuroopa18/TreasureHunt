@@ -52,6 +52,8 @@ public class TeamController {
                     team.setName(newTeam.getName());
                 if (newTeam.getEndTimeQuest() != team.getEndTimeQuest())
                     team.setEndTimeQuest(newTeam.getEndTimeQuest());
+                if (newTeam.getScore() != team.getScore())
+                    team.setScore(newTeam.getScore());
                 return teamRepository.save(team);
             })
             .orElseGet(() -> {

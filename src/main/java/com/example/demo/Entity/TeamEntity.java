@@ -17,6 +17,8 @@ public class TeamEntity implements Serializable {
 
     private Date endTimeQuest;
 
+    private Integer score;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clue_id")
     private ClueEntity clue_on;
@@ -38,6 +40,7 @@ public class TeamEntity implements Serializable {
     public TeamEntity(String name) {
         this.name = name;
         this.endTimeQuest = null;
+        this.score = 0;
     }
 
     public int getId() {
@@ -98,5 +101,13 @@ public class TeamEntity implements Serializable {
 
     public void addUser(UserEntity user) {
         users.add(user);
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
