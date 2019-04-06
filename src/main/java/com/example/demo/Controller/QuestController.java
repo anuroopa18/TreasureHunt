@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Date;
+import java.util.Set;
 
 @RestController
 public class QuestController {
@@ -65,6 +66,17 @@ public class QuestController {
                 newQuest.setId(id);
                 return questRepository.save(newQuest);
             });
+    }
+
+    @GetMapping("api/quests/code/{code}")
+    public QuestEntity getQuest(@PathVariable("code") String code) {
+        Iterable<QuestEntity> quests = questRepository.findAll();
+        for (QuestEntity quest: quests) {
+            if (code.equals(quest.getCode()))
+                return quest;
+        }
+
+        return null;
     }
 
     public String getAlphaNumericString() {
