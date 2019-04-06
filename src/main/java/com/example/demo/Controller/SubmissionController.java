@@ -1,16 +1,14 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Entity.*;
-import com.example.demo.Repository.ClueRepository;
-import com.example.demo.Repository.SubmissionRepository;
-import com.example.demo.Repository.TeamRepository;
-import com.example.demo.Repository.UserRepository;
+import com.example.demo.Repository.*;
 import com.example.demo.Services.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +19,7 @@ public class SubmissionController {
     private SubmissionRepository submissionRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private QuestRepository questRepository;
 
     @Autowired
     private ClueRepository clueRepository;
@@ -37,14 +35,14 @@ public class SubmissionController {
     @GetMapping("/api/submissions/{id}")
     public SubmissionEntity findSubmissionById(@PathVariable("id") int id) {
         return submissionRepository.findById(id).orElseThrow(() ->
-            new EntityNotFoundException("Submission is not found" + id));
+            new EntityNotFoundException("Submission is not found " + id));
     }
 
     @GetMapping("/api/submissions/clue_id/{clueId}/team_id/{teamId}")
     public List<SubmissionEntity> findSubmissionByClueAndTeam(@PathVariable("clueId") int clueId,
                                                         @PathVariable("teamId") int teamId) {
         ClueEntity clue = clueRepository.findById(clueId).orElseThrow(() ->
-            new EntityNotFoundException("Clue is not found" + clueId));
+            new EntityNotFoundException("Clue is not found " + clueId));
         Set<SubmissionEntity> submissions = clue.getSubmissions();
         List<SubmissionEntity> clueTeamSubmissions = new ArrayList();
 
@@ -65,6 +63,7 @@ public class SubmissionController {
         ClueEntity clue = clueRepository.findById(clue_id).orElseThrow(() ->
             new EntityNotFoundException("Clue is not found " + clue_id));
 
+        submission.setSubmissionTime(new Date());
         submission.setClue(clue);
         submission.setTeam(team);
         return submissionRepository.save(submission);
@@ -84,6 +83,7 @@ public class SubmissionController {
                 if (submission.getImage() == null ||
                     (newSubmission.getImage() != null && !newSubmission.getImage().equals(submission.getImage())))
                     submission.setImage(newSubmission.getImage());
+                    submission.setSubmissionTime(new Date());
                 return submissionRepository.save(submission);
             })
             .orElseGet(() -> {
@@ -125,5 +125,27 @@ public class SubmissionController {
             })
             .orElseThrow(() ->
                 new EntityNotFoundException("Submission is not found " + id));
+    }
+
+    @GetMapping("/api/submission/monitor/questId/{questId}")
+    public List<SubmissionEntity> getAllRecentSubmissionOfTeam(@PathVariable("questId") Integer questid) {
+        QuestEntity quest = questRepository.findById(questid).orElseThrow(() ->
+            new EntityNotFoundException("Quest is not found " + questid));
+        Set<TeamEntity> teams = quest.getTeams();
+        List<SubmissionEntity> finalSubmission = new ArrayList<>();
+        for (TeamEntity team: teams) {
+            Set<SubmissionEntity> submissions = team.getSubmissions();
+            Date recentTime = new Date(2000, 11, 21);
+            SubmissionEntity recentSubmission = null;
+            for (SubmissionEntity submission: submissions) {
+                boolean before = recentTime.before(submission.getSubmissionTime());
+                if (!before)
+                    recentSubmission = submission;
+            }
+
+            finalSubmission.add(recentSubmission);
+        }
+
+        return finalSubmission;
     }
 }
