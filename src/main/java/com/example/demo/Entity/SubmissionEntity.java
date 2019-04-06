@@ -2,6 +2,7 @@ package com.example.demo.Entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "submissions")
@@ -18,15 +19,13 @@ public class SubmissionEntity implements Serializable {
     @JoinColumn(name = "team_id", nullable = false)
     private TeamEntity team;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
     private String image;
 
     private String imageStatus;
 
     private String reason;
+
+    private Date submissionTime;
 
     public int getId() {
         return id;
@@ -50,14 +49,6 @@ public class SubmissionEntity implements Serializable {
 
     public void setTeam(TeamEntity team) {
         this.team = team;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
     }
 
     public String getImage() {
@@ -85,5 +76,13 @@ public class SubmissionEntity implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Date getSubmissionTime() {
+        return submissionTime;
+    }
+
+    public void setSubmissionTime(Date submissionTime) {
+        this.submissionTime = submissionTime;
     }
 }

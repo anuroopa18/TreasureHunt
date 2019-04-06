@@ -33,7 +33,7 @@ public class HintController {
         hintRepository.deleteById(id);
     }
 
-    @PutMapping("/api/teams/{id}")
+    @PutMapping("/api/hints/{id}")
     public HintEntity updateHint(@RequestBody (required = false) HintEntity newHint, @PathVariable("id") Integer id) {
         return hintRepository.findById(id)
             .map(hint -> {
