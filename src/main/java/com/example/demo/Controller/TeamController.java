@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Entity.ClueEntity;
+import com.example.demo.Entity.QuestEntity;
 import com.example.demo.Entity.TeamEntity;
 import com.example.demo.Repository.ClueRepository;
 import com.example.demo.Repository.QuestRepository;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Date;
+import java.util.*;
 
 @RestController
 public class TeamController {
@@ -60,6 +61,23 @@ public class TeamController {
                 newTeam.setId(id);
                 return teamRepository.save(newTeam);
             });
+    }
+
+    @GetMapping("api/teams/quests/code/{code}")
+    public List<TeamEntity> getTeamsByQuestCode(@PathVariable("code") String code) {
+        Iterable<QuestEntity> quests = questRepository.findAll();
+        List<TeamEntity> teams = new ArrayList<>();
+        for (QuestEntity quest: quests) {
+            if (code.equals(quest.getCode())) {
+                for (TeamEntity t : quest.getTeams()) {
+                    teams.add(t);
+                }
+
+                Collections.sort(teams, Comparator.comparing(TeamEntity::getName));
+            }
+        }
+
+        return teams;
     }
 
     @PutMapping("/api/teams/{id}/clue_on/{clue_id}")
