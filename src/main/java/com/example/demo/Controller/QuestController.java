@@ -69,20 +69,14 @@ public class QuestController {
     }
 
     @GetMapping("api/quests/code/{code}")
-    public List<TeamEntity> getQuest(@PathVariable("code") String code) {
+    public QuestEntity getQuest(@PathVariable("code") String code) {
         Iterable<QuestEntity> quests = questRepository.findAll();
-        List<TeamEntity> teams = new ArrayList<>();
         for (QuestEntity quest: quests) {
-            if (code.equals(quest.getCode())) {
-                for (TeamEntity t : quest.getTeams()) {
-                    teams.add(t);
-                }
-
-                Collections.sort(teams, Comparator.comparing(TeamEntity::getName));
-            }
+            if (code.equals(quest.getCode()))
+                return quest;
         }
 
-        return teams;
+        return null;
     }
 
 
