@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 public class SubmissionController {
@@ -128,23 +127,29 @@ public class SubmissionController {
     }
 
     @GetMapping("/api/submission/monitor/questId/{questId}")
-    public List<SubmissionEntity> getAllRecentSubmissionOfTeam(@PathVariable("questId") Integer questid) {
+    public List<SubmissionEntity> getAllRecentSubmissionOfTeam(@PathVariable("questId") Integer questid) throws ParseException {
         QuestEntity quest = questRepository.findById(questid).orElseThrow(() ->
             new EntityNotFoundException("Quest is not found " + questid));
         Set<TeamEntity> teams = quest.getTeams();
         List<SubmissionEntity> finalSubmission = new ArrayList<>();
         for (TeamEntity team: teams) {
             Set<SubmissionEntity> submissions = team.getSubmissions();
-            Date recentTime = new Date(2000, 11, 21);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date recentTime = sdf.parse("2010-01-31");
             SubmissionEntity recentSubmission = null;
             for (SubmissionEntity submission: submissions) {
-                boolean before = recentTime.before(submission.getSubmissionTime());
-                if (!before)
+                if (recentTime.compareTo(submission.getSubmissionTime()) < 0){
                     recentSubmission = submission;
+                    recentTime = submission.getSubmissionTime();
+                }
             }
 
-            finalSubmission.add(recentSubmission);
+            if (recentSubmission != null)
+                finalSubmission.add(recentSubmission);
         }
+
+
+        Collections.sort(finalSubmission, Comparator.comparing(SubmissionEntity::getSubmissionTime));
 
         return finalSubmission;
     }

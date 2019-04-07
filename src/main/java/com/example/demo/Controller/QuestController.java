@@ -2,13 +2,13 @@ package com.example.demo.Controller;
 
 import com.example.demo.Entity.ClueEntity;
 import com.example.demo.Entity.QuestEntity;
+import com.example.demo.Entity.TeamEntity;
 import com.example.demo.Repository.QuestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class QuestController {
@@ -69,15 +69,22 @@ public class QuestController {
     }
 
     @GetMapping("api/quests/code/{code}")
-    public QuestEntity getQuest(@PathVariable("code") String code) {
+    public List<TeamEntity> getQuest(@PathVariable("code") String code) {
         Iterable<QuestEntity> quests = questRepository.findAll();
+        List<TeamEntity> teams = new ArrayList<>();
         for (QuestEntity quest: quests) {
-            if (code.equals(quest.getCode()))
-                return quest;
+            if (code.equals(quest.getCode())) {
+                for (TeamEntity t : quest.getTeams()) {
+                    teams.add(t);
+                }
+
+                Collections.sort(teams, Comparator.comparing(TeamEntity::getName));
+            }
         }
 
-        return null;
+        return teams;
     }
+
 
     public String getAlphaNumericString() {
         int n = 5;
