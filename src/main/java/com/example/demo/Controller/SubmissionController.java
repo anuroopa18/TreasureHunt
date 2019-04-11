@@ -110,8 +110,13 @@ public class SubmissionController {
                     if (status.equals("ACCEPTED")) {
                         if (team == null) throw new NullPointerException("Team is not found for this submission");
                         ClueEntity nextClue = service.nextClue(team.getQuest(), clue);
-                        team.setClue_on(nextClue);
-                        teamRepository.save(team);
+                        if (nextClue == null) {
+                            team.setEndTimeQuest(new Date());
+                            teamRepository.save(team);
+                        } else {
+                            team.setClue_on(nextClue);
+                            teamRepository.save(team);
+                        }
                     }
                 }
 
